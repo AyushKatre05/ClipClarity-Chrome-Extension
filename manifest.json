@@ -1,22 +1,33 @@
 {
     "manifest_version": 3,
     "name": "ClipClarity",
-    "description": "ClipClarity simplifies selected text by providing clear explanations or translations directly on the page. Powered by Gemini, it offers instant insights or custom responses based on user prompts without leaving the current tab.",
+    "description": "ClipClarity simplifies selected text by providing explanations via Gemini API.",
     "version": "1.0",
-    "icons": {
+    "permissions": ["storage", "activeTab", "scripting"],
+    "background": {
+      "service_worker": "public/background.js"  
+    },
+    "action": {
+      "default_popup": "public/popup.html",      
+      "default_icon": {
         "16": "./images/icon-16.png",
         "32": "./images/icon-32.png",
         "48": "./images/icon-48.png",
         "128": "./images/icon-128.png"
+      }
     },
-    "action": {
-        "default_icon": {
-            "16": "./images/icon-16.png",
-            "32": "./images/icon-32.png",
-            "48": "./images/icon-48.png",
-            "128": "./images/icon-128.png"
-        },
-        "default_title": "Click Me",
-        "default_popup": "popup.html"
+    "content_scripts": [
+      {
+        "matches": ["<all_urls>"],
+        "js": ["public/contentScript.js"]
+      }
+    ],
+    "icons": {
+      "16": "./images/icon-16.png",
+      "32": "./images/icon-32.png",
+      "48": "./images/icon-48.png",
+      "128": "./images/icon-128.png"
     }
-}
+  }
+  
+  
