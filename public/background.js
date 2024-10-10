@@ -1,29 +1,41 @@
+
 chrome.runtime.onInstalled.addListener(() => {
-    console.log("ClipClarity installed");
+    console.log("ClipClarity is set for work");
 });
 
-// Handle the Gemini API call
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === "callGeminiAPI") {
-        const selectedText = request.text;
-        
-        // Make a request to the Gemini API (pseudo-code, replace with real implementation)
-        fetch('https://gemini-api.com/explain', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ text: selectedText })
-        })
-        .then(response => response.json())
-        .then(data => {
-            sendResponse({ result: data.explanation });
-        })
-        .catch(err => {
-            console.error("API call failed", err);
-            sendResponse({ result: "Error fetching explanation" });
-        });
-
-        return true;  // Keep the message channel open for async response
+chrome.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    console.log(request);
+    const selectedHTML = request.selectedHTML;
+    const UserPrompt = request.userPrompt;
+    if (request.action === "ChatGpt Call") {
+        return new Promise(async (resolve, reject) => {
+           const actualUserPrompt = `You are a helpful assistant. Here is the HTML content I want to process:\n${selectedHTML}\nPlease ${UserPrompt} while preserving the structure of the HTML.`;
+           try {
+              const gptResponse = await callOpenAI(actualUserPrompt); // Async API call
+              console.log("Response from OpenAI:", gptResponse);
+              resolve({ simplifiedText: gptResponse });
+            } catch (error) {
+              console.error("Error while calling OpenAI:", error);
+              reject({ error: "Failed to communicate with GPT" });
+            }
+        }).then(sendResponse).catch(sendResponse);
     }
+    return true; // Keeps the message port open for async response
 });
+
+async function callOpenAI(prompt) {
+    const response = await fetch("http://localhost:5000/api/chat", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ prompt }),
+    });
+
+    if (!response.ok) {
+        throw new Error("Failed to fetch the API");
+    }
+
+    const data = await response.json();
+    return data; // Ensure the data is returned
+}
