@@ -1,11 +1,12 @@
 {
     "manifest_version": 3,
     "name": "ClipClarity",
-    "description": "ClipClarity simplifies selected text by providing explanations via Gemini API.",
+    "description": "ClipClarity simplifies selected text by providing explanations via ChatGpt API.",
     "version": "1.0",
-    "permissions": ["storage", "activeTab", "scripting"],
+    "permissions": ["storage", "activeTab", "scripting","tabs"],
     "background": {
-      "service_worker": "public/background.js"  
+      "service_worker": "public/background.js",
+      "type" : "module"
     },
     "action": {
       "default_popup": "public/popup.html",      
