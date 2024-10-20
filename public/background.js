@@ -45,12 +45,22 @@
 // background.js
 
 // background.js
-
+chrome.action.onClicked.addListener((tab)=>{
+    console.log(tab.id)
+    chrome.scripting.executeScript({
+        target: {tabId: tab.id, allFrames:true},
+        files: ["dist/contentScript.js"]
+    })
+})
 console.log("Background script loaded");
 
 chrome.runtime.onInstalled.addListener(() => {
     console.log("ClipClarity is set for work");
 });
+
+
+
+
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     console.log("Received message:", request);
@@ -101,4 +111,76 @@ async function callOpenAI(prompt) {
     console.log("Data from server:", data);
     return data; // Expecting an array
 }
+
+
+
+
+
+
+
+
+
+// let activeTabId = null;
+
+// chrome.action.onClicked.addListener((tab) => {
+//     activeTabId = tab.id; // Store the current active tab ID
+//     console.log(activeTabId)
+//     console.log(tab.url)
+//     chrome.scripting.executeScript({
+//         target: { tabId: tab.id },
+//         files: ['./contentScript.js']
+//     },(msg)=>{
+//         console.log("Script Injected")
+//     });
+    
+// });
+
+
+
+
+// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+//   if (message.action === 'injectContentScript') {
+//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+//       const activeTab = tabs[0];
+
+//       if (activeTab) {
+//         chrome.scripting.executeScript(
+//           {
+//             target: { tabId: activeTab.id },
+//             files: ['./public/contentScript.js'],
+//           },
+//           () => {
+//             if (chrome.runtime.lastError) {
+//               console.error('Injection failed:', chrome.runtime.lastError);
+//               sendResponse({ status: 'error' });
+//             } else {
+//               sendResponse({ status: 'success' });
+//             }
+//           }
+//         );
+//       }
+//     });
+
+//     return true; // Keeps the messaging channel open for async response
+//   }
+// });
+
+
+
+
+
+// Listen for tab updates to deactivate ClipClarity when navigating away
+// chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+//     console.log(changeInfo.status)
+//     console.log(tabId)
+//     if (tabId === activeTabId && changeInfo.status === 'complete' && tab.url) {
+//         // Optionally, you can also send a message to content.js to deactivate
+//         chrome.tabs.sendMessage(tabId, { action: "deactivate" });
+//     } else {
+//         // Clear the active tab ID when leaving the tab
+//         if (activeTabId === tabId) {
+//             activeTabId = null;
+//         }
+//     }
+// });
 
