@@ -2,10 +2,14 @@ const path = require('path');
 
 module.exports = {
     mode: "development",
-    entry: "./src/index.tsx", // Entry point for your React code
+    entry: {
+        background: "./public/background.js",
+        contentScript: "./public/contentScript.js",
+    },
+    
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'bundle.js' // Output bundle
+        filename: '[name].js' // Output bundle
     },
     resolve: {
         extensions: ['.ts', '.tsx', '.js']
