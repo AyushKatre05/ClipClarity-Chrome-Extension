@@ -1,4 +1,4 @@
-console.log("Hi from Content Script");
+alert("Hi from Content Script");
 
 
 const inputElement = document.createElement("input");
@@ -95,6 +95,9 @@ const getUserPrompt = () => {
 // });
 
 
+
+
+
 let savedRange = null; // To store the selected range
 let selectedHTML = "";
 
@@ -154,6 +157,105 @@ document.addEventListener("mouseup", function () {
         });
     }
 });
+
+
+
+
+
+
+
+
+
+
+
+
+// let isActive = false;
+
+// // Listen for messages from the background script
+// chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+//     if (request.action === "deactivate") {
+//         deactivateClipClarity();
+//     }
+// });
+
+// Function to activate ClipClarity
+// function activateClipClarity() {
+//     isActive = true;
+//     // Add your activation logic here (e.g., showing input fields, etc.)
+//     console.log("ClipClarity activated.");
+//     document.addEventListener("mouseup", function () {
+//         const selection = window.getSelection();
+//         if (selection.rangeCount > 0 && selection.toString()) {
+//             savedRange = selection.getRangeAt(0).cloneRange(); // Save the range
+//             const container = document.createElement("div");
+//             container.appendChild(savedRange.cloneContents());
+//             selectedHTML = container.innerHTML;
+    
+//             // Insert input element just after the selected paragraph
+//             savedRange.endContainer.parentElement.insertAdjacentElement("afterend", inputElement);
+//             inputElement.focus(); // Focus on the input
+    
+    
+//             inputElement.addEventListener("change", (event) => {
+//                 userPromptValue = event.target.value;
+//                 InitialSetup(event);
+//                 console.log("User Prompt: " + userPromptValue);
+            
+//                 // Reapply the saved range to keep the selection
+//                 const selection = window.getSelection();
+//                 selection.removeAllRanges(); // Clear any current selection
+//                 selection.addRange(savedRange); // Reapply the saved range
+            
+//                 if (selectedHTML && userPromptValue) {
+//                     console.log(selectedHTML)
+//                     // Send selectedHTML to the background script or handle locally
+//                     chrome.runtime.sendMessage({
+//                         action: "ChatGpt Call",
+//                         selectedHTML: selectedHTML,
+//                         userPrompt: userPromptValue
+//                     }, function (response) {
+            
+//                         if (chrome.runtime.lastError) {
+//                             console.error("Runtime error:", chrome.runtime.lastError);
+//                             return;
+//                         }
+//                         // Assume response contains the simplified HTML for all selected content
+//                         if (response && response.simplifiedText) {
+//                             // Handle each range and replace its contents
+//                             for (let i = 0; i < selection.rangeCount; i++) {
+//                                 const range = selection.getRangeAt(i);
+//                                 range.deleteContents(); // Remove the original content
+//                                 const newNode = document.createElement("div");
+//                                 newNode.innerHTML = response.simplifiedText[i] || response.simplifiedText[0]; // Insert simplified content
+//                                 range.insertNode(newNode);
+//                             }
+//                         }
+//                     });
+//                 }
+            
+//                 // Reset input for future interactions
+//                 inputElement.value = "";
+//             });
+//         }
+//     });
+// }
+
+// Function to deactivate ClipClarity
+// function deactivateClipClarity() {
+//     isActive = false;
+//     // Add your deactivation logic here (e.g., hiding input fields, etc.)
+//     console.log("ClipClarity deactivated.");
+//     inputElement.remove();
+// }
+
+// // Automatically activate when the user clicks the extension icon
+// chrome.runtime.onInstalled.addListener(() => {
+//     chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+//         if (msg.action === "activate") {
+//             activateClipClarity();
+//         }
+//     });
+// });
 
 
 
