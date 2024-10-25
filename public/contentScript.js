@@ -1,4 +1,4 @@
-alert("Hi from Content Script");
+
 
 
 const inputElement = document.createElement("input");

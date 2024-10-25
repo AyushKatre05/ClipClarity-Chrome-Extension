@@ -45,13 +45,13 @@
 // background.js
 
 // background.js
-chrome.action.onClicked.addListener((tab)=>{
-    console.log(tab.id)
-    chrome.scripting.executeScript({
-        target: {tabId: tab.id, allFrames:true},
-        files: ["dist/contentScript.js"]
-    })
-})
+// chrome.action.onClicked.addListener((tab)=>{
+//     console.log(tab.id)
+//     chrome.scripting.executeScript({
+//         target: {tabId: tab.id, allFrames:true},
+//         files: ["dist/contentScript.js"]
+//     })
+// })
 console.log("Background script loaded");
 
 chrome.runtime.onInstalled.addListener(() => {
@@ -138,32 +138,32 @@ async function callOpenAI(prompt) {
 
 
 
-// chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-//   if (message.action === 'injectContentScript') {
-//     chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-//       const activeTab = tabs[0];
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'injectScript') {
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      const activeTab = tabs[0];
 
-//       if (activeTab) {
-//         chrome.scripting.executeScript(
-//           {
-//             target: { tabId: activeTab.id },
-//             files: ['./public/contentScript.js'],
-//           },
-//           () => {
-//             if (chrome.runtime.lastError) {
-//               console.error('Injection failed:', chrome.runtime.lastError);
-//               sendResponse({ status: 'error' });
-//             } else {
-//               sendResponse({ status: 'success' });
-//             }
-//           }
-//         );
-//       }
-//     });
+      if (activeTab) {
+        chrome.scripting.executeScript(
+          {
+            target: { tabId: activeTab.id },
+            files: ['dist/contentScript.js'],
+          },
+          () => {
+            if (chrome.runtime.lastError) {
+              console.error('Injection failed:', chrome.runtime.lastError);
+              sendResponse({ status: 'error' });
+            } else {
+              sendResponse({ status: 'success' });
+            }
+          }
+        );
+      }
+    });
 
-//     return true; // Keeps the messaging channel open for async response
-//   }
-// });
+    return true; // Keeps the messaging channel open for async response
+  }
+});
 
 
 
