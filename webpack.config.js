@@ -3,8 +3,10 @@ const path = require('path');
 module.exports = {
     mode: "development",
     entry: {
+        html: "./src/index.tsx",
         background: "./public/background.js",
         contentScript: "./public/contentScript.js",
+        popup: "./public/popup.js"
     },
     
     output: {
